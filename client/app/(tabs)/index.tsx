@@ -1,10 +1,31 @@
-import { BANNERS } from '@/assets/assets'
+import { BANNERS, dummyProducts } from '@/assets/assets'
 import Header from '@/components/Header'
-import { View, Text, ScrollView, Image, Dimensions } from 'react-native'
+import { View, Text, ScrollView, Image, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import {useEffect, useState} from 'react'
+import { useRouter } from 'expo-router'
+import { CATEGORIES } from '@/constants'
+import Categories from '@/components/Categories'
+import { Product } from '@/constants/types'
 
 const {width} = Dimensions.get('window')
 export default function Home() {
+  const router = useRouter()
+  const [activeBannerIndex, setActiveBannerIndex] = useState(0)
+  const categories = [{id: 'all', name: 'All', icon: "grid"}, {id: 'home', name: 'Home', icon: "home"},
+    ...CATEGORIES]
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(false)
+
+  const fetchProducts = async () => {
+    setProducts(dummyProducts);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    fetchProducts();
+  }, [])
+  
   return (
     <SafeAreaView className='flex-1' edges={
       ['top']
@@ -14,17 +35,78 @@ export default function Home() {
       <ScrollView className='flex-1 px-4'
       showsVerticalScrollIndicator={false}>
         {/* banner slider */}
+        <View className='mb-4'>
         <ScrollView horizontal pagingEnabled  showsHorizontalScrollIndicator={false}
         className='w-full h-48 rounded-xl'
-        scrollEventThrottle={16}>
+        scrollEventThrottle={16}
+        onScroll={(event) => {
+          const index = Math.round(event.nativeEvent.contentOffset.x / width)
+          setActiveBannerIndex(index)
+        }}>
           {BANNERS.map((banner, index) => (
             <View key={index} className='relative w-full h-48
             bg-gray-200 overflow-hidden' style={{width: width - 32}}>
               <Image source={{uri: banner.image}} className='w-full h-full'
               resizeMode='cover' />
+
+              <View className='absolute bottom-4 left-4 z-10 '>
+                <Text className='text-white font-bold text-lg'>{banner.title}</Text>
+                <Text className='text-white'>{banner.subtitle}</Text>
+                <TouchableOpacity className='mt-2 px-4 py-2 bg-white rounded-full'>
+                  <Text className='text-blue-500 font-bold'>Get Started</Text>
+                </TouchableOpacity>
+
+              </View>
+              <View className='absolute inset-0 bg-black/40' />
             </View>
           ))}
         </ScrollView>
+        {/* pagination */}
+        <View className='flex-row justify-center mt-4'>
+          {BANNERS.map((_, index) => (
+            <View key={index} className={`h-2 rounded-full mx-1 ${index == activeBannerIndex ? 'w-6 bg-blue-500' : 'w-2 bg-gray-300'}`} />
+          ))}
+        </View>
+        </View>
+
+        {/* categories */}
+        <View className='mb-6'>
+          <View className='flex-row items-center justify-between mb-2'>
+            <Text className='text-lg font-bold'>Categories</Text>
+          </View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View className='flex-row space-x-4'>
+              {categories.map((category, index) => (
+                <Categories key={index} item={category}
+                isSelected={false}
+                onPress={() => router.push({
+                  pathname: "/shop", params: {category: category.id === "all" ? "" : category.name}
+                })} />
+              ))}
+            </View>
+          </ScrollView>
+        </View>
+
+        {/* products */}
+        <View className='mb-6'>
+          <View className='flex-row items-center justify-between mb-2'>
+            <Text className='text-lg font-bold'>
+              Popular Products
+            </Text>
+            <TouchableOpacity onPress={() => router.push({pathname: "/shop", params: {category: ""}})}>
+              <Text className='text-blue-500 font-bold'>See All</Text>
+            </TouchableOpacity>
+          </View>
+          {loading ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : (
+            <View>
+              {products.slice(0, 4).map((product) => (
+                <Text key={product._id}>{product.name}</Text>
+              ))}
+            </View>
+          )}
+        </View>
       </ScrollView>
     </SafeAreaView>
   )
