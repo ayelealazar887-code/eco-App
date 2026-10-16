@@ -7,6 +7,7 @@ import { useRouter } from 'expo-router'
 import { CATEGORIES } from '@/constants'
 import Categories from '@/components/Categories'
 import { Product } from '@/constants/types'
+import ProductCard from '@/components/ProductCard'
 
 const {width} = Dimensions.get('window')
 export default function Home() {
@@ -100,12 +101,21 @@ export default function Home() {
           {loading ? (
             <ActivityIndicator size="large" color="#0000ff" />
           ) : (
-            <View>
+            <View className='flex-row flex-wrap justify-between'>
               {products.slice(0, 4).map((product) => (
-                <Text key={product._id}>{product.name}</Text>
+                <ProductCard key={product._id} product={product} />
               ))}
             </View>
           )}
+        </View>
+
+        {/* newslatter */}
+        <View className='mb-6 p-4 bg-gray-100 rounded-2xl items-center'>
+          <Text className='text-lg font-bold text-center'>Join Our News</Text>
+          <Text className='text-gray-500 text-center'>Subscribe to our newsletter to get the latest updates and get 10% off your first purchase.</Text>
+          <TouchableOpacity className='mt-4 w-4/5 py-2 bg-blue-500 rounded-full items-center'>
+            <Text className='text-white font-bold text-base'>Subscribe</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
