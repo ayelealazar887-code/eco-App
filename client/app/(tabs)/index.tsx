@@ -50,6 +50,8 @@ export default function Home() {
               <Image source={{uri: banner.image}} className='w-full h-full'
               resizeMode='cover' />
 
+              <View className='absolute inset-0 bg-black/40' />
+              
               <View className='absolute bottom-4 left-4 z-10 '>
                 <Text className='text-white font-bold text-lg'>{banner.title}</Text>
                 <Text className='text-white'>{banner.subtitle}</Text>
@@ -58,7 +60,7 @@ export default function Home() {
                 </TouchableOpacity>
 
               </View>
-              <View className='absolute inset-0 bg-black/40' />
+              
             </View>
           ))}
         </ScrollView>
@@ -111,7 +113,7 @@ export default function Home() {
 
         {/* newslatter */}
         <View className='mb-6 p-4 bg-gray-100 rounded-2xl items-center'>
-          <Text className='text-lg font-bold text-center'>Join Our News</Text>
+          <Text className='text-lg font-bold text-center'>Join Our Newsletter</Text>
           <Text className='text-gray-500 text-center'>Subscribe to our newsletter to get the latest updates and get 10% off your first purchase.</Text>
           <TouchableOpacity className='mt-4 w-4/5 py-2 bg-blue-500 rounded-full items-center'>
             <Text className='text-white font-bold text-base'>Subscribe</Text>
