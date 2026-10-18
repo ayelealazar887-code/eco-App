@@ -4,7 +4,6 @@ import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/constants";
 import { Image } from "react-native";
-import { use } from "react";
 import { useWishList } from "@/context/WishListContext";
 
 export default function ProductCard({ product }: ProductCardProps) {
