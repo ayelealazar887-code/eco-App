@@ -181,7 +181,7 @@ export default function ProductDetails() {
       </ScrollView>
 
       {/* footer */}
-      <View className="absolute bottom-0 right-0 flex-row p-4 pb-8 bg-white border-t border-gray-100">
+      <View className="absolute bottom-0 left-0 right-0 flex-row p-4 pb-8 bg-white border-t border-gray-100">
   <TouchableOpacity
     className="w-4/5 flex-row items-center justify-center bg-primary py-4 rounded-full shadow-lg"
   >
