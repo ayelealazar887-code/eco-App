@@ -16,6 +16,7 @@ import { dummyProducts } from "@/assets/assets";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "@/constants";
 import { Ionicons } from "@expo/vector-icons";
+import Toast from "react-native-toast-message";
 
 const { width } = Dimensions.get("window");
 
@@ -24,7 +25,7 @@ export default function ProductDetails() {
   const router = useRouter();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
-  const { addToCart, cartItems } = useCart();
+  const { addToCart, cartItems, itemCount } = useCart();
   const { toggleWishlist, isInWishlist } = useWishList();
 
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
@@ -53,7 +54,19 @@ export default function ProductDetails() {
       </SafeAreaView>
     );
   }
-  const isLiked = isInWishlist(product._id);
+  const isLiked = isInWishlist(product._id);{
+
+  const handleAddtoCart = ()=>{
+    if(!selectedSize) {
+      Toast.show({
+        type: 'info',
+        text1: 'No Size Selected',
+        text2: 'Please select a size'
+      });
+      return
+    }
+    addToCart(product, selectedSize);
+  }
 
   return (
     <View className="flex-1 bg-white">
@@ -182,15 +195,25 @@ export default function ProductDetails() {
 
       {/* footer */}
       <View className="absolute bottom-0 left-0 right-0 flex-row p-4 pb-8 bg-white border-t border-gray-100">
-  <TouchableOpacity
-    className="w-4/5 flex-row items-center justify-center bg-primary py-4 rounded-full shadow-lg"
-  >
-    <Ionicons name="bag-outline" size={20} color="white" />
-    <Text className="text-white font-bold text-base ml-2">
-      Add to Cart
-    </Text>
-  </TouchableOpacity>
-</View>
+        <TouchableOpacity
+        onPress={handleAddtoCart} className="w-4/5 flex-row items-center justify-center bg-primary py-4 rounded-full shadow-lg">
+          <Ionicons name="bag-outline" size={20} color="white" />
+          <Text className="text-white font-bold text-base ml-2">
+            Add to Cart
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+        onPress={() => router.push("/(tabs)/cart")} className="
+        w-1/5 py-3 flex-row justify-center relative">
+          <Ionicons name="cart-outline" size={24}/>
+          <View className="absolute top-2 right-4 size-4 bg-black rounded-full flex-row justify-center items-center">
+            <Text className="text-white text-[9px]">
+              {itemCount}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
+}
 }
