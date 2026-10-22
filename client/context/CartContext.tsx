@@ -36,7 +36,7 @@ export function CartProvider({children}: {children: React.ReactNode}) {
             id: item._id,
             productId: item._id,
             product: item.product,
-            quantity: item.quantity,
+            quantity: item.quantity ?? 1,
             size: item.size || 'M',
             price: item.price,
         }));
@@ -76,7 +76,6 @@ export function CartProvider({children}: {children: React.ReactNode}) {
             cartTotal,
             itemCount,
             isLoding,
-            removeFromCart,
         }}>
             {children}
         </CartContext.Provider>
