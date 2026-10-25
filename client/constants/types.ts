@@ -43,7 +43,7 @@ export type ProductCardProps = {
 };
 
 export interface CartItem {
-    product: Product;
+    product: Product | string;
     quantity: number;
     size: string;
 }
