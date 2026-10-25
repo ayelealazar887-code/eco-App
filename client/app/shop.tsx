@@ -12,9 +12,9 @@ import ProductCard from '@/components/ProductCard';
 export default function Shop() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [loadingMore, setLoadingMore] = useState(false);
+    const [loadingMore, setLoadingMore] = useState<boolean>(false);
     const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
+    const [hasMore, setHasMore] = useState<boolean>(true);
 
     const fetchProducts = async (pageNumber = 1 )=>{
         if(pageNumber === 1){
