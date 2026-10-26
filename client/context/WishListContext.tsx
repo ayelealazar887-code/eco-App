@@ -17,15 +17,16 @@ export function WishListProvider({children}: {children: React.ReactNode}) {
         setLoading(false);
     }
 
-    const toggleWishlist = async (product: Product) => {
-        const exists = wishlist.find(item => item._id === product._id);
-        setWishlist(prev => {
-            if (exists) {
-                return prev.filter(item => item._id !== product._id);
-            } else {
-                return [...prev, product];
-            }
-        });
+    const toggleWishlist = (product: Product) => {
+      setWishlist((prev) => {
+        const exists = prev.some((item) => item._id === product._id);
+
+        if (exists) {
+          return prev.filter((item) => item._id !== product._id);
+        }
+
+        return [...prev, product];
+      });
     };
     const isInWishlist = (productId: string) => {
         return wishlist.some(item => item._id === productId);

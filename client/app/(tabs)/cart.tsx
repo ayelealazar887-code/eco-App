@@ -66,7 +66,7 @@ export default function Cart() {
             <Text className='text-secondary text-lg'>Your cart is empty</Text>
             <TouchableOpacity onPress={() => router.push('/')}
               className='mt-4'>
-              <Text className='text-primary font-bol'>Start Shopping</Text>
+              <Text className='text-primary font-bold'>Start Shopping</Text>
             </TouchableOpacity>
           </View>
         )
