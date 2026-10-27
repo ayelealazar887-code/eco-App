@@ -19,7 +19,7 @@ export default function Favorite() {
         showsVerticalScrollIndicator={false}>
           <View className='flex-row flex-wrap justify-between '>
             {wishlist.map((product) => (
-              <ProductCard key={product._id} product={product} />
+              <ProductCard product={product} />
             ))}
           </View>
         </ScrollView>
