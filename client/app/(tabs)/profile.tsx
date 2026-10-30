@@ -1,18 +1,52 @@
-import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
+import {
+  ActivityIndicator,
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import React from "react";
-import { dummyUser } from "@/assets/assets";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "@/components/Header";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS, PROFILE_MENU } from "@/constants";
+import { useClerk, useUser } from "@clerk/expo";
+import Toast from "react-native-toast-message";
 
 export default function Profile() {
-  const { user } = { user: dummyUser };
+  const { isLoaded, user } = useUser();
+  const { signOut } = useClerk();
   const router = useRouter();
+
   const handleLogout = async () => {
-    router.replace("/sign-in")
+    try {
+      await signOut();
+      router.replace("/profile");
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Couldn't log out",
+        text2:
+          error instanceof Error
+            ? error.message
+            : "Please try again.",
+      });
+    }
   }
+
+  if (!isLoaded) {
+    return (
+      <SafeAreaView className="flex-1 bg-surface" edges={["top"]}>
+        <Header title="Profile" />
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" color={COLORS.accent} />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-surface" edges={["top"]}>
       <Header title="Profile" />
@@ -41,7 +75,15 @@ export default function Profile() {
             items-center shadow-lg"
               onPress={() => router.push("/sign-in")}
             >
-              <Text className="text-white font-bold text-lg">Login/Signup</Text>
+              <Text className="text-white font-bold text-lg">Sign in</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="w-3/5 py-3 rounded-full items-center border border-primary mt-3"
+              onPress={() => router.push("/sign-up")}
+            >
+              <Text className="text-primary font-bold text-lg">
+                Create account
+              </Text>
             </TouchableOpacity>
           </View>
         ) : (
@@ -49,16 +91,23 @@ export default function Profile() {
             {/* profile info */}
             <View className="items-center mb-8">
               <View className="mb-3">
-                <Image
-                  source={{ uri: user.imageUrl }}
-                  className="size-20 border-2 border-white shadow-sm rounded-full"
-                />
+                {user.imageUrl ? (
+                  <Image
+                    source={{ uri: user.imageUrl }}
+                    className="size-20 border-2 border-white shadow-sm rounded-full"
+                  />
+                ) : (
+                  <View className="size-20 rounded-full bg-gray-200 items-center justify-center">
+                    <Ionicons name="person" size={40} color={COLORS.secondary} />
+                  </View>
+                )}
               </View>
               <Text className="text-xl font-bold text-primary">
-                {user.firstName + "" + user.lastName}
+                {user.fullName || "Your account"}
               </Text>
               <Text className="text-secondary text-sm">
-                {user.emailAddresses[0].emailAddress}
+                {user.primaryEmailAddress?.emailAddress ??
+                  user.emailAddresses[0]?.emailAddress}
               </Text>
               {/* admin panel if user is admin*/}
               {user.publicMetadata?.role === 'admin' && (
