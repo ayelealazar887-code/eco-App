@@ -61,18 +61,8 @@ export default function Profile() {
       >
         {!user ? (
           <View className="items-center w-full">
-            <View className="w-24 h-24 rounded-full bg-gray-200 items-center justify-center mb-6">
-              <Ionicons name="person" size={40} color={COLORS.secondary} />
-            </View>
-            <Text className="text-primary font-bold text-xl mb-2">
-              Guest User
-            </Text>
-            <Text className="text-secondary text-base mb-8 text-center w-3/4 px-4">
-              Log in to view your profile, orders, and addresses.
-            </Text>
             <TouchableOpacity
-              className="bg-primary w-3/5 py-3 rounded-full
-            items-center shadow-lg"
+              className="bg-primary w-3/5 py-3 rounded-full items-center shadow-lg"
               onPress={() => router.push("/sign-in")}
             >
               <Text className="text-white font-bold text-lg">Sign in</Text>
